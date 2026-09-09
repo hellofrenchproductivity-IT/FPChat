@@ -207,17 +207,10 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
     }
   }, [chatId, isNewChat, setMessages]);
 
-  useEffect(() => {
-    if (chatData && !isNewChat) {
-      const cookieModel = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("chat-model="))
-        ?.split("=")[1];
-      if (cookieModel) {
-        setCurrentModelId(decodeURIComponent(cookieModel));
-      }
-    }
-  }, [chatData, isNewChat]);
+  // Le modèle est verrouillé côté serveur (route.ts ignore selectedChatModel) et il
+  // n'y a plus de sélecteur pour en choisir un autre — un cookie "chat-model" laissé
+  // par un ancien choix (avant ce verrouillage) ne doit plus pouvoir réappliquer un
+  // modèle différent de DEFAULT_CHAT_MODEL sur un chat existant.
 
   const hasAppendedQueryRef = useRef(false);
   useEffect(() => {

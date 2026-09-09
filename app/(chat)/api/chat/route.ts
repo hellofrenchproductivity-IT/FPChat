@@ -14,7 +14,6 @@ import { createResumableStreamContext } from "resumable-stream";
 import { auth, type UserType } from "@/app/(auth)/auth";
 import { entitlementsByUserType } from "@/lib/ai/entitlements";
 import {
-  allowedModelIds,
   chatModels,
   DEFAULT_CHAT_MODEL,
   getCapabilities,
@@ -78,8 +77,13 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { id, message, messages, selectedChatModel, selectedVisibilityType } =
-      requestBody;
+    const {
+      id,
+      message,
+      messages,
+      selectedChatModel: _selectedChatModel,
+      selectedVisibilityType,
+    } = requestBody;
 
     const [botIdResult, session] = await Promise.all([
       checkBotId().catch(() => null),
@@ -94,9 +98,11 @@ export async function POST(request: Request) {
       return new ChatbotError("unauthorized:chat").toResponse();
     }
 
-    const chatModel = allowedModelIds.has(selectedChatModel)
-      ? selectedChatModel
-      : DEFAULT_CHAT_MODEL;
+    // Modèle verrouillé côté serveur : quoi que le client envoie dans
+    // selectedChatModel, on ignore volontairement — sinon quelqu'un peut modifier
+    // la requête directement (devtools, replay) et contourner un sélecteur juste
+    // caché côté interface. C'est la vraie garantie, pas seulement visuelle.
+    const chatModel = DEFAULT_CHAT_MODEL;
 
     await checkIpRateLimit(ipAddress(request));
 
