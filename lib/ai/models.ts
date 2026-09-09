@@ -4,13 +4,6 @@
 // topped up (see lib/ai/models.ts chatModels for the full paid catalog).
 export const DEFAULT_CHAT_MODEL = "zai/glm-5.3-flash";
 
-export const titleModel = {
-  description: "Fast model for title generation",
-  id: "zai/glm-5.3-flash",
-  name: "GLM 5.3 Flash",
-  provider: "zai",
-};
-
 export type ModelCapabilities = {
   tools: boolean;
   vision: boolean;
@@ -24,6 +17,13 @@ export type ChatModel = {
   description: string;
   gatewayOrder?: string[];
   reasoningEffort?: "none" | "minimal" | "low" | "medium" | "high";
+};
+
+export const titleModel: ChatModel = {
+  description: "Fast model for title generation",
+  id: "zai/glm-5.3-flash",
+  name: "GLM 5.3 Flash",
+  provider: "zai",
 };
 
 export const chatModels: ChatModel[] = [
