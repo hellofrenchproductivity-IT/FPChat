@@ -1,11 +1,14 @@
-export const DEFAULT_CHAT_MODEL = "moonshotai/kimi-k2.5";
+// TEMP: pinned to a free-tier-eligible model while the team's AI Gateway
+// account has no paid credits — Kimi K2.5 (and other paid-only models) return
+// a RestrictedModelsError for free-tier accounts. Revisit once credits are
+// topped up (see lib/ai/models.ts chatModels for the full paid catalog).
+export const DEFAULT_CHAT_MODEL = "zai/glm-5.3-flash";
 
 export const titleModel = {
   description: "Fast model for title generation",
-  gatewayOrder: ["fireworks", "bedrock"],
-  id: "moonshotai/kimi-k2.5",
-  name: "Kimi K2.5",
-  provider: "moonshotai",
+  id: "zai/glm-5.3-flash",
+  name: "GLM 5.3 Flash",
+  provider: "zai",
 };
 
 export type ModelCapabilities = {
@@ -32,7 +35,14 @@ export const chatModels: ChatModel[] = [
     provider: "deepseek",
   },
   {
-    description: "Moonshot AI flagship model",
+    description: "Free-tier multimodal model with tool use, 1M context",
+    id: "zai/glm-5.3-flash",
+    name: "GLM 5.3 Flash",
+    provider: "zai",
+  },
+  {
+    description:
+      "Moonshot AI flagship model (requires paid AI Gateway credits)",
     gatewayOrder: ["fireworks", "bedrock"],
     id: "moonshotai/kimi-k2.5",
     name: "Kimi K2.5",
