@@ -297,7 +297,19 @@ export async function POST(request: Request) {
           onEnd() {
             stopWaitingStatus();
           },
-          onError() {
+          onError(event) {
+            // TEMP DIAGNOSTIC LOGGING - remove once root cause of chat failures is confirmed
+            console.error(
+              "[chat route] streamText inner onError raw:",
+              event.error instanceof Error
+                ? {
+                    cause: event.error.cause,
+                    message: event.error.message,
+                    name: event.error.name,
+                    stack: event.error.stack,
+                  }
+                : event.error
+            );
             stopWaitingStatus();
           },
           providerOptions: {
@@ -336,6 +348,23 @@ export async function POST(request: Request) {
 
         dataStream.merge(
           toUIMessageStream({
+            onError(error) {
+              // TEMP DIAGNOSTIC LOGGING - remove once root cause of chat failures is confirmed
+              console.error(
+                "[chat route] toUIMessageStream onError raw:",
+                error instanceof Error
+                  ? {
+                      cause: error.cause,
+                      message: error.message,
+                      name: error.name,
+                      stack: error.stack,
+                    }
+                  : error
+              );
+              return error instanceof Error
+                ? error.message
+                : "An error occurred.";
+            },
             sendReasoning: isReasoningModel,
             stream: result.stream,
           })
