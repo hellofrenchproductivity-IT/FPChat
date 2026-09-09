@@ -395,6 +395,13 @@ export async function POST(request: Request) {
         }
       },
       onError: (error) => {
+        // TEMP DIAGNOSTIC LOGGING - remove once root cause of chat failures is confirmed
+        console.error(
+          "[chat route] streamText onError raw:",
+          error instanceof Error
+            ? { message: error.message, name: error.name, stack: error.stack }
+            : error
+        );
         if (
           error instanceof Error &&
           error.message?.includes(
